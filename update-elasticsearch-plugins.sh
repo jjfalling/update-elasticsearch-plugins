@@ -26,6 +26,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 
 elasticsearchPluginPage='http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-plugins.html'
 elasticsearchPluginDir='/usr/share/elasticsearch/plugins'
+elasticsearchPlugin='/usr/share/elasticsearch/bin/plugin'
 
 # Make sure only root can run our script
 if [ "$(id -u)" != "0" ]; then
@@ -88,8 +89,8 @@ do
                         then
                                 #get the project name
                                 githubProject=`echo $currentEsPlugin | sed 's/https:\/\/github.com\///'`
-                                /usr/share/elasticsearch/bin/plugin -r $currentInstalledPlugin
-                                /usr/share/elasticsearch/bin/plugin -i $githubProject
+                                $elasticsearchPlugin -r $currentInstalledPlugin
+                                $elasticsearchPlugin -i $githubProject
                         fi
 
                         break
