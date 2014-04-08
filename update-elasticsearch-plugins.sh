@@ -55,7 +55,7 @@ then
 fi
 
 #check if curl is installed
-command -v foo >/dev/null 2>&1 || { printf "\nERROR: curl is not installed\n\n"; exit 1; }
+command -v curl >/dev/null 2>&1 || { printf "\nERROR: curl is not installed\n\n"; exit 1; }
 
 echo "Obtaining current list of plugins, please wait..."
 
