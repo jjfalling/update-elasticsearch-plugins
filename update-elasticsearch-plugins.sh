@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
-#
-################################
-# update-elasticsearch-plugins #
-################################
-#
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+#****************************************************************************
+#*   update-elasticsearch-plugins                                           *
+#*   Update elasticsearch plugins that are hosted in git                    *
+#*                                                                          *
+#*   Copyright (C) 2014 by Jeremy Falling except where noted.               *
+#*                                                                          *
+#*   This program is free software: you can redistribute it and/or modify   *
+#*   it under the terms of the GNU General Public License as published by   *
+#*   the Free Software Foundation, either version 3 of the License, or      *
+#*   (at your option) any later version.                                    *
+#*                                                                          *
+#*   This program is distributed in the hope that it will be useful,        *
+#*   but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+#*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+#*   GNU General Public License for more details.                           *
+#*                                                                          *
+#*   You should have received a copy of the GNU General Public License      *
+#*   along with this program.  If not, see <http://www.gnu.org/licenses/>.  *
+#****************************************************************************
 # We get list of plugins from elasticsearch: http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-plugins.html
 # then compare it to a list of currently installed plugins.
 
@@ -37,6 +53,9 @@ then
                 printf "\n\nRunning in auto mode, I will upgrade all plugins without asking!\n\n"
                 sleep 1
 fi
+
+#check if curl is installed
+command -v foo >/dev/null 2>&1 || { printf "\nERROR: curl is not installed\n\n"; exit 1; }
 
 echo "Obtaining current list of plugins, please wait..."
 
