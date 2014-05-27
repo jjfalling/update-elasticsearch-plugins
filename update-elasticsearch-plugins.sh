@@ -90,8 +90,8 @@ do
         if [ $response == "y" ]
         then
             echo "using custom plugin url instead of offical es plugin url for $currentInstalledPlugin"
-            /usr/share/elasticsearch/bin/plugin -r $currentInstalledPlugin
-            /usr/share/elasticsearch/bin/plugin -i ${customPlugins["$currentInstalledPlugin"]}
+            $elasticsearchPlugin -r $currentInstalledPlugin
+            $elasticsearchPlugin -i ${customPlugins["$currentInstalledPlugin"]}
         fi
 
     else
@@ -103,31 +103,10 @@ do
             then
                 if [ $auto -eq 1 ]
                 then
-<<<<<<< HEAD
                     response="y"
                 else
                     printf "\nUpgrade $currentInstalledPlugin? [y/n] "
                     read response
-=======
-                        if [ $auto -eq 1 ]
-                        then
-                                response="y"
-                        else
-                                printf "\nUpgrade $currentInstalledPlugin? [y/n] "
-                                read response
-                        fi
-
-
-                        if [ $response == "y" ]
-                        then
-                                #get the project name
-                                githubProject=`echo $currentEsPlugin | sed 's/https:\/\/github.com\///'`
-                                $elasticsearchPlugin -r $currentInstalledPlugin
-                                $elasticsearchPlugin -i $githubProject
-                        fi
-
-                        break
->>>>>>> 49d495d643fc9fdbcaaa4dda42fac29f7913f0ea
                 fi
 
 
@@ -135,13 +114,14 @@ do
                 then
                     #get the project name
                     githubProject=`echo $currentEsPlugin | sed 's/https:\/\/github.com\///'`
-                    /usr/share/elasticsearch/bin/plugin -r $currentInstalledPlugin
-                    /usr/share/elasticsearch/bin/plugin -i $githubProject
+                    $elasticsearchPlugin -r $currentInstalledPlugin
+                    $elasticsearchPlugin -i $githubProject
                 fi
 
                 break
             fi
 
-        done
+	done
     fi
 done
+
