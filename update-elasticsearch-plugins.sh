@@ -28,18 +28,23 @@ elasticsearchPluginPage='http://www.elasticsearch.org/guide/en/elasticsearch/ref
 elasticsearchPluginDir='/usr/share/elasticsearch/plugins'
 elasticsearchPlugin='/usr/share/elasticsearch/bin/plugin'
 
+#define a hash with the plugin name as the key and github user/plugin name as the value
+declare -A customPlugins
+customPlugins=( ["kopf"]="lmenezes/elasticsearch-kopf" )
+
 # Make sure only root can run our script
 if [ "$(id -u)" != "0" ]; then
-        echo "This script needs to run as root to run the updates!" 1>&2
-        exit 1
+    echo "This script needs to run as root to run the updates!" 1>&2
+    exit 1
 fi
 
 if [[ "$1"  == "-h" ]]
 then
-        echo "update-elasticsearch-plugins"
-        echo "This will update your elasticsearch plugins in interactive mode"
-        echo "or automaticly if you give the -y flag"
-        exit
+    echo "update-elasticsearch-plugins"
+    echo "This will update your elasticsearch plugins in interactive mode"
+    echo "or automaticly if you give the -y flag"
+    echo "You can also manually add plugins hosted on github that are not on the es plugin page by editing the customPlugins hash"
+    exit
 
 fi
 
@@ -50,9 +55,9 @@ printf "This will offer to update github hosted plugins. It will remove the old 
 auto=0
 if [[ "$1"  == "-y" ]]
 then
-                auto=1
-                printf "\n\nRunning in auto mode, I will upgrade all plugins without asking!\n\n"
-                sleep 1
+    auto=1
+    printf "\n\nRunning in auto mode, I will upgrade all plugins without asking!\n\n"
+    sleep 1
 fi
 
 #check if curl is installed
@@ -71,11 +76,39 @@ echo "Looking at plugins"
 for currentInstalledPlugin in "${installedPlugins[@]}"
 do
 
+    if [[ ${customPlugins["$currentInstalledPlugin"]} ]]
+    then
+        if [ $auto -eq 1 ]
+        then
+            response="y"
+        else
+            printf "\nUpgrade $currentInstalledPlugin? [y/n] "
+            read response
+        fi
+
+
+        if [ $response == "y" ]
+        then
+            echo "using custom plugin url instead of offical es plugin url for $currentInstalledPlugin"
+            /usr/share/elasticsearch/bin/plugin -r $currentInstalledPlugin
+            /usr/share/elasticsearch/bin/plugin -i ${customPlugins["$currentInstalledPlugin"]}
+        fi
+
+    else
+
         for currentEsPlugin in "${esPlugins[@]}"
         do
-                currentTrue=`echo $currentEsPlugin | grep --silent $currentInstalledPlugin; echo $?`
-                if [ $currentTrue -eq 0 ]
+            currentTrue=`echo $currentEsPlugin | grep --silent $currentInstalledPlugin; echo $?`
+            if [ $currentTrue -eq 0 ]
+            then
+                if [ $auto -eq 1 ]
                 then
+<<<<<<< HEAD
+                    response="y"
+                else
+                    printf "\nUpgrade $currentInstalledPlugin? [y/n] "
+                    read response
+=======
                         if [ $auto -eq 1 ]
                         then
                                 response="y"
@@ -94,8 +127,21 @@ do
                         fi
 
                         break
+>>>>>>> 49d495d643fc9fdbcaaa4dda42fac29f7913f0ea
                 fi
 
-        done
 
+                if [ $response == "y" ]
+                then
+                    #get the project name
+                    githubProject=`echo $currentEsPlugin | sed 's/https:\/\/github.com\///'`
+                    /usr/share/elasticsearch/bin/plugin -r $currentInstalledPlugin
+                    /usr/share/elasticsearch/bin/plugin -i $githubProject
+                fi
+
+                break
+            fi
+
+        done
+    fi
 done
