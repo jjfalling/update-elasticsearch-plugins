@@ -66,13 +66,26 @@ fi
 #check if curl is installed
 command -v curl >/dev/null 2>&1 || { printf "\nERROR: curl is not installed\n\n"; exit 1; }
 
+#ensure the elasticsearch plugin command exists
+command -v $elasticsearchPlugin >/dev/null 2>&1 || { printf "\nERROR: elasticsearch plugin command $elasticsearchPlugin does not exist\n\n"; exit 1; }
+
 printf "Obtaining current list of plugins from the elasticsearch website, please wait...\n"
 
 #curl the es plugin page. Then grep for each url line (contains ulink), remove a bogus line, strip it down to just the url, then shove it in an array
 esPlugins=(`curl -s $elasticsearchPluginPage | grep ulink | grep -v "be found under the" |sed 's/<a class="ulink" href="//' | sed 's/" target=".*//'`)
+if [ "$esPlugins" == "" ]; then
+    printf "\nERROR: curling $elasticsearchPluginPage failed\n"
+    exit 1
+fi
 
-#get a list of current plugins and shove it into an array
-installedPlugins=(`ls $elasticsearchPluginDir |grep -v preupgrade*`)
+#ensure the es plugin dir exists
+if [ -d "$elasticsearchPluginDir" ]; then
+    #get a list of current plugins and shove it into an array
+    installedPlugins=(`ls $elasticsearchPluginDir |grep -v preupgrade*`)
+else
+    printf "\nERROR: elasticsearchPluginDir $elasticsearchPluginDir does not exist\n"
+    exit 1
+fi
 
 #look at each installed plugin and try to find its repo, then offer to update
 printf "Looking at plugins\n"
