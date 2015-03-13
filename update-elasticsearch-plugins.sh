@@ -24,7 +24,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 #Edit the following to match your needs
 elasticsearchPluginDir='/usr/share/elasticsearch/plugins'
 elasticsearchPlugin='/usr/share/elasticsearch/bin/plugin'
-elasticsearchPluginPage='http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-plugins.html'
+elasticsearchPluginPage='http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-plugins.html'
 
 #define a hash with the plugin name as the key and github user/plugin name as the value
 declare -A customPlugins
