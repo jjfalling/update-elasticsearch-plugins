@@ -1,3 +1,6 @@
+Note: This is for an ancient version of elasticsearch. It will not work on any version released after 2015 or 2016.
+
+
 update-elasticsearch-plugins
 ============================
 
